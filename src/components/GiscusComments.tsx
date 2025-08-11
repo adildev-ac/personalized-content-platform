@@ -16,7 +16,16 @@ export default function GiscusComments({ mapping = "pathname", theme = "preferre
     const repoId = process.env.NEXT_PUBLIC_GISCUS_REPO_ID as string | undefined;
     const category = process.env.NEXT_PUBLIC_GISCUS_CATEGORY as string | undefined;
     const categoryId = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID as string | undefined;
-    if (!repo || !repoId || !category || !categoryId) {
+    
+    // Check if variables exist and are not placeholder values
+    const isPlaceholder = (value: string | undefined) => 
+      !value || 
+      value.includes('REPLACE_WITH_') || 
+      value.includes('PLACEHOLDER_') ||
+      value.includes('YOUR_') ||
+      value.includes('_FROM_GISCUS_APP');
+    
+    if (isPlaceholder(repo) || isPlaceholder(repoId) || isPlaceholder(category) || isPlaceholder(categoryId)) {
       setEnabled(false);
       return;
     }
@@ -39,7 +48,8 @@ export default function GiscusComments({ mapping = "pathname", theme = "preferre
       ref.current.appendChild(scriptEl);
     }
     return () => {
-      if (ref.current) ref.current.innerHTML = "";
+      const currentRef = ref.current;
+      if (currentRef) currentRef.innerHTML = "";
     };
   }, [mapping, theme]);
 
