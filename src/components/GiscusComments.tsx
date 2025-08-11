@@ -30,10 +30,12 @@ export default function GiscusComments({ mapping = "pathname", theme = "preferre
     scriptEl.setAttribute("data-category", category);
     scriptEl.setAttribute("data-category-id", categoryId);
     scriptEl.setAttribute("data-mapping", mapping);
+    scriptEl.setAttribute("data-strict", "0");
     scriptEl.setAttribute("data-reactions-enabled", "1");
     scriptEl.setAttribute("data-emit-metadata", "0");
     scriptEl.setAttribute("data-input-position", "bottom");
     scriptEl.setAttribute("data-theme", theme);
+    scriptEl.setAttribute("data-lang", "en");
     if (ref.current) {
       ref.current.innerHTML = "";
       ref.current.appendChild(scriptEl);
