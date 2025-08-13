@@ -26,14 +26,14 @@ interface ICoverImage {
 }
 
 // Corrected interface for Category data
-interface ICategory {
+export interface ICategory {
   id: number;
   name: string;
   slug: string;
 }
 
 // Corrected interface for Tag data
-interface ITag {
+export interface ITag {
   id: number;
   name: string;
   slug: string;

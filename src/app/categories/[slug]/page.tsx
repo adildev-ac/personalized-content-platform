@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { getAllCategorySlugs, getArticlesByCategorySlug } from "@/lib/api";
+import { getAllCategorySlugs, getArticlesByCategorySlug, getCategoryBySlug } from "@/lib/api";
+import ArticleCard from "@/components/ArticleCard";
+import { notFound } from "next/navigation";
 
 export const revalidate = 300; // ISR 5 min
 
@@ -8,29 +10,32 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   return {
     title: `Category: ${slug}`,
     description: `Articles in category ${slug}`,
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  const category = await getCategoryBySlug(slug);
+  if (!category) {
+    notFound();
+  }
   const articles = await getArticlesByCategorySlug(slug);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-6">Category: {slug}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {articles.map((a) => (
-          <Link key={a.id} href={`/articles/${a.slug}`} className="block rounded-lg border dark:border-gray-700 p-5 hover:shadow">
-            <h3 className="text-xl font-semibold">{a.title}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">{a.excerpt}</p>
-          </Link>
-        ))}
+    <div className="max-w-5xl mx-auto px-4 py-10">
+      <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-8">Posts in: {category.name}</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {articles.length > 0 ? (
+          articles.map((article) => <ArticleCard key={article.id} article={article} />)
+        ) : (
+          <p className="col-span-full text-center text-gray-500">No articles found in this category.</p>
+        )}
       </div>
-    </section>
+    </div>
   );
 }

@@ -1,18 +1,11 @@
-/* src/app/globals.css */
-
-@import "tailwindcss";
-
-/* Keep Tailwind's built-in container utility */
-
 /* Custom Giscus Styling */
 .giscus-frame {
   width: 100% !important;
   border: none !important;
-  min-height: 240px !important;
+  min-height: 240px;
 }
 
 /* Remove original border to let our container define the styles */
 .giscus-frame iframe {
   border: none !important;
-  width: 100% !important;
 }

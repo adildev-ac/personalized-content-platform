@@ -1,0 +1,35 @@
+:root {
+  --giscus-container-width: 100%;
+}
+
+.giscus, 
+.giscus-frame {
+  width: 100% !important;
+  border: none !important;
+  min-height: 240px !important;
+}
+
+/* Make the input taller */
+.giscus .gsc-comment-box-textarea {
+  min-height: 120px !important;
+}
+
+/* Ensure proper styling for dark mode */
+.giscus .gsc-reactions-button {
+  color: inherit !important;
+}
+
+/* Fix for proper width */
+.giscus-frame iframe {
+  width: 100% !important;
+}
+
+/* Make reactions section more modern */
+.giscus .gsc-reactions-count {
+  font-size: 0.9rem !important;
+}
+
+/* Add some padding for input area */
+.giscus .gsc-comment-box {
+  padding: 12px !important;
+}

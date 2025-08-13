@@ -9,9 +9,32 @@ import GiscusComments from '@/components/GiscusComments';
 
 const STRAPI_URL = STRAPI_API_URL;
 
+/**
+ * Validates that a slug meets security requirements
+ * @param slug The article slug to validate
+ * @returns True if the slug is valid
+ */
+function validateSlug(slug: string): boolean {
+  // Only allow alphanumeric characters, hyphens, and underscores
+  // Prevents directory traversal and other injection attacks
+  const validSlugRegex = /^[a-z0-9-_]+$/i;
+  
+  // Check length to prevent DoS
+  const validLength = slug.length > 0 && slug.length <= 100;
+  
+  return validSlugRegex.test(slug) && validLength;
+}
+
 // UPDATED: In Next.js 15, params is async. Await it before using.
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  
+  // Validate slug to prevent injection attacks
+  if (!validateSlug(slug)) {
+    console.error(`Invalid article slug requested: ${slug}`);
+    notFound();
+  }
+  
   const article = await getArticleBySlug(slug);
 
   if (!article) {
@@ -58,7 +81,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       
   {/* Article Content */}
   <div className="prose prose-slate dark:prose-invert max-w-none">
-        <BlocksRenderer content={article.content} />
+        <BlocksRenderer content={article.content as any} />
       </div>
 
   {/* Tags Section removed by request */}
